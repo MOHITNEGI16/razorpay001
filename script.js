@@ -4,6 +4,10 @@ const paymentCancelBtn = document.getElementById("cancel");
 const formDiv = document.getElementById("formDiv");
 const buttons = document.querySelectorAll(".button");
 
+let userName = document.getElementById("name");
+let userDonation = document.getElementById("payment");
+let userEmail = document.getElementById("email");
+
 buttons.forEach((ele) => {
   ele.addEventListener("click", () => {
     formDiv.style.display = "block";
@@ -16,22 +20,23 @@ paymentCancelBtn.addEventListener("click", () => {
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  let userName = document.getElementById("name").value;
-  let userDonation = Number(document.getElementById("payment").value);
-  let userEmail = document.getElementById("email").value;
-
+  console.log(userDonation.value, userEmail.value, userName.value);
   const foundationImageLink =
     "https://i.pinimg.com/564x/d8/16/4a/d8164a7d91f58a8974b0b56ca38dbf1b.jpg";
-  if (userName || userDonation || userEmail) {
-    handlePayment(userName, userDonation, userEmail, foundationImageLink);
+  if (userName.value && userDonation.value && userEmail.value) {
+    handlePayment(
+      userName.value,
+      userDonation.value,
+      userEmail.value,
+      foundationImageLink
+    );
     formDiv.style.display = "none";
+    userName.value = "";
+    userDonation.value = "";
+    userEmail.value = "";
   } else {
     alert("Please Fill All The Details ");
   }
-
-  userName = "";
-  userDonation = "";
-  userEmail = "";
 });
 
 function handlePayment(donarName, donarDonation, donarEmail, image) {
@@ -42,14 +47,14 @@ function handlePayment(donarName, donarDonation, donarEmail, image) {
   // Configure options for Razorpay
   const options = {
     key: "rzp_test_KwzFxt77N3FJwf", // Razorpay API key
-    amount: donarDonation * 100, // Amount in paisa
+    amount: Number(donarDonation) * 100, // Amount in paisa
     currency: "INR",
     name: "Cousin Foundation",
     description: `Payment for World Betterment`,
     image: image,
     handler: function (response) {
       // Show success notification and play the success sound
-      toastr["success"](`Payment successful for Donation!`);
+      // toastr["success"](`Payment successful for Donation!`);
       // Play the preloaded success sound
       successSound.play();
     },
